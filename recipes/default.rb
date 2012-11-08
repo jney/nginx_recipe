@@ -21,6 +21,8 @@
 include_recipe 'nginx::ohai_plugin'
 
 case node['nginx']['install_method']
+when 'openresty'
+  include_recipe 'nginx::openresty'
 when 'source'
   include_recipe 'nginx::source'
 when 'package'
