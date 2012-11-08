@@ -133,6 +133,22 @@ when "bluepill"
     reload_command "[[ -f #{node['nginx']['pid']} ]] && kill -HUP `cat #{node['nginx']['pid']}` || true"
     action :nothing
   end
+when "upstart"
+  template "/etc/init/nginx.conf" do
+    source "nginx.upstart.conf.erb"
+    mode 00644
+    variables(
+      :src_binary  => node['nginx']['binary'],
+      :nginx_dir   => node['nginx']['dir'],
+      :pid         => node['nginx']['pid']
+    )
+  end
+  
+  service "nginx" do
+    provider Chef::Provider::Service::Upstart
+    supports :status => true, :restart => true, :reload => true
+    action :enable # just enable, will be started when conf will be generated
+  end
 else
   node.set['nginx']['daemon_disable'] = false
 
