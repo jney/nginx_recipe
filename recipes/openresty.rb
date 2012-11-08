@@ -90,7 +90,7 @@ bash "compile_openresty" do
   not_if do
     nginx_force_recompile == false &&
       node.automatic_attrs['nginx'] &&
-      node.automatic_attrs['nginx']['openresty']['version'] == node['nginx']['openresty']['version'] &&
+      File.exists?(node['nginx']['openresty']['prefix'])  &&
       node.automatic_attrs['nginx']['configure_arguments'].sort == configure_flags.sort
   end
 end
